@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,json,subprocess; d=json.load(sys.stdin); f=d.get('tool_input',{}).get('file_path',''); f and __import__('re').search(r'\\.(ts|tsx|js|json|md|css)$',f) and subprocess.run(['pnpm','exec','prettier','--write',f],cwd='/home/ylocal/repos/OCRTicketNo',capture_output=True)\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import sys,json; d=json.load(sys.stdin); f=d.get('tool_input',{}).get('file_path',''); exit(2) if 'pnpm-lock.yaml' in f else exit(0)\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
